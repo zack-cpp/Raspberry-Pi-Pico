@@ -9,9 +9,6 @@ String html_2 = "<form id='F1' action='LEDON'></form><br>";
 String html_3 = "<form id='F2' action='LEDOFF'></form><br>";
 String html_4 = "</div></body></html>";
 
-//#include <SoftwareSerial.h>
-//SoftwareSerial serial(2,0); //D4 RX, D3 TX
-
 String req;
 String data;
 void connectWiFi();
@@ -20,7 +17,6 @@ WiFiServer server(80);
 
 void setup() {
   Serial.begin(9600);
-//  serial.begin(9600);
   connectWiFi();
   server.begin();
 }
@@ -33,17 +29,12 @@ void loop() {
     //do after client connected
     req = client.readStringUntil('\r');
     req += '\n';
-//    unsigned short int j = 0;
     for(int i = 5; i < req.length()-10; i++){
       data += req[i];
-//      Serial.write(req[i]);
     }
     data += '\n';
     Serial.write(data.c_str());
     data = "";
-//    Serial.write(req.c_str());
-//    Serial.print("Web Data: ");
-//    Serial.println(req);
     client.flush();
     client.print(head);
     client.print(html_1 );
@@ -51,15 +42,6 @@ void loop() {
     client.print(html_3 );
     client.print(html_4);
   }
-//  while(Serial.available()){
-//    char s = Serial.read();
-//    data += s;
-//  }
-//  if(data != ""){
-//    Serial.print("Data: ");
-//    Serial.println(data);
-//  }
-  
   delay(10);
 }
 
