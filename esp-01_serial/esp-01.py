@@ -1,39 +1,28 @@
-from machine import Pin, PWM, UART
-from time import sleep
+from machine import Pin, UART
+import utime
 
-pwm = PWM(Pin(25))
-pwm.freq(1000)
+#initiate UART1
+uart1 = UART(1, baudrate=9600, bits=8, parity=None, stop=1, tx=Pin(8), rx=Pin(5))
 
-uart = UART(1, baudrate=9600, bits=8, parity=None, stop=1, tx=Pin(8), rx=Pin(5))
+#initiate PIN
+led = Pin(15, Pin.OUT)
 
-def uartSend(cmd):
-    uart.write(cmd)
-
-def uartRead():
-    hasil = ""
-    kata = ""
+def readUART(uart):
+    rawData = ""
+    data = ""
     while uart.any():
-        kata = uart.readline()
-    if kata != "":
-        for i in range(0, len(kata)-1):
-            hasil = hasil + chr(kata[i])
-    return hasil
-
-def fade(duty, direction):
-    for i in range (8 * 256):
-        duty += direction
-        if duty > 255:
-            duty = 255
-            direction = -1
-        elif duty < 0:
-            duty = 0
-            direction = 1
-        pwm.duty_u16(duty * duty)
-        sleep(0.001)
+        rawData = uart.readline()
+    if rawData != "":
+        for i in range(0, len(rawData)-1):
+            data = data + chr(rawData[i])
+    return data
 
 while True:
-    data = uartRead()
-    if data != "":
+    data = readUART(uart1)
+    if data == "LEDON":
+        led.value(1)
         print(data)
-        fade(0,1)
-    sleep(0.05)
+    elif data == "LEDOFF":
+        led.value(0)
+        print(data)
+    utime.sleep_ms(50)
