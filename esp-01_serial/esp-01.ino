@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 
-#define SSID "rumahkucing"
-#define PASS  "1sl4m4g4m4ku"
+#define SSID ""
+#define PASS  ""
 
 String head = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
 String html_1 = "<!DOCTYPE html><html><body><div id='main'>";
@@ -29,18 +29,18 @@ void loop() {
     //do after client connected
     req = client.readStringUntil('\r');
     req += '\n';
-    for(int i = 5; i < req.length()-10; i++){
+    for(int i = 5; i < req.length() - 10; i++){
       data += req[i];
     }
     data += '\n';
     Serial.write(data.c_str());
     data = "";
-    client.flush();
     client.print(head);
     client.print(html_1 );
     client.print(html_2 );
     client.print(html_3 );
     client.print(html_4);
+	client.flush();
   }
   delay(10);
 }
